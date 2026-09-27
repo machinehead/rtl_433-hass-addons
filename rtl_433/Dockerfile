@@ -21,11 +21,14 @@ WORKDIR /build
 
 FROM builder as rtl_433_builder
 
-RUN git clone https://github.com/merbanan/rtl_433
+RUN git clone https://github.com/ilektron/rtl_433
 WORKDIR ./rtl_433
 
-# Build a specific commit or tag.
-ARG rtl433GitRevision=25.12
+# Vivint decoder rewrite (rtl_433 PR #3692, unmerged) -- auto-derives the
+# per-device encryption seed from ~6 packets instead of needing it supplied
+# externally. Point back at merbanan/rtl_433 and a tagged release once that
+# PR lands upstream.
+ARG rtl433GitRevision=feat-improve-vivint-security-decoder
 RUN git checkout ${rtl433GitRevision}
 WORKDIR ./build
 RUN cmake ..
